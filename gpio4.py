@@ -2,6 +2,10 @@ import RPi.GPIO as GPIO
 import time
 import paho.mqtt.client as mqtt
 import threading
+import logging
+
+FORMAT = "%(asctime)s.%(msecs)03d %(levelname)s [%(process)d] [%(filename)s::%(funcName)s@%(lineno)s] %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
 
 BROKER_ADDRESS = "192.168.0.109"
 BROKER_PORT = 1883
@@ -19,6 +23,7 @@ class Motor:
     def switch_on_motor(self):
         if GPIO.input(CHANNEL) == 0:
             GPIO.output(CHANNEL, GPIO.HIGH)
+            logging.info("Switched On")
 
     def sleeper(self,minutes):
         time.sleep(60*minutes)
@@ -26,6 +31,7 @@ class Motor:
     def switch_off_motor(self):
         if GPIO.input(CHANNEL) == 1:
             GPIO.output(CHANNEL, GPIO.LOW)
+            logging.info("Switched Off")
     
     def get_motor_status(self):
         return GPIO.input(CHANNEL)
@@ -38,7 +44,7 @@ class Motor:
             else:
                 return False
         except Exception as error :
-            print(error)
+            logging.error(error)
             return False
     
     def get_run_minutes(self, message):
@@ -66,7 +72,7 @@ motor_instance = Motor()
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
+    logging.info("Connected with result code "+str(rc))
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
@@ -75,7 +81,7 @@ def on_connect(client, userdata, flags, rc):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    print(msg.topic+" "+str(msg.payload))
+    logging.info(msg.topic+" "+str(msg.payload))
     if msg.topic == "getstatus":
         current_state = motor_instance.get_motor_status()
         client.publish("currentstatus", payload=str(current_state), qos=0, retain=False)
