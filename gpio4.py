@@ -3,7 +3,7 @@ import time
 import paho.mqtt.client as mqtt
 import threading
 
-BROKER_ADDRESS = "localhost"
+BROKER_ADDRESS = "192.168.0.109"
 BROKER_PORT = 1883
 CHANNEL = 4
 

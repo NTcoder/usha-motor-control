@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-    usha-motor:
+    motor:
         restart: always
         logging:
             options:
@@ -9,3 +9,4 @@ services:
         volumes:
             - /sys:/sys
         privileged: true
+        network_mode: "host"
