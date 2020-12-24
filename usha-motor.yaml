@@ -7,4 +7,5 @@ services:
                 max-size: 10m
         image: usha-motor:1
         volumes:
-            /sys:/sys
+            - /sys:/sys
+        privileged: true
