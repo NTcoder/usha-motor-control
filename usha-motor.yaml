@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+    usha-motor:
+        restart: always
+        logging:
+            options:
+                max-size: 10m
+        image: usha-motor:1
+	volumes:
+	    /sys:/sys
