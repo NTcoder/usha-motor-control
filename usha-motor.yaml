@@ -6,5 +6,5 @@ services:
             options:
                 max-size: 10m
         image: usha-motor:1
-	volumes:
-	    /sys:/sys
+        volumes:
+            /sys:/sys
