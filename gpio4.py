@@ -81,12 +81,14 @@ def on_connect(client, userdata, flags, rc):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    logging.info(msg.topic+" "+str(msg.payload))
-    if msg.topic == "getstatus":
+    message_topic = msg.topic
+    logging.info(message_topic+" "+str(msg.payload))
+    if message_topic == "getstatus":
         current_state = motor_instance.get_motor_status()
         client.publish("currentstatus", payload=str(current_state), qos=0, retain=False)
-    elif motor_instance.validate_message(msg.topic):
-        motor_job_th = threading.Thread(target=motor_instance.run_job, args=(msg.topic))
+        logging.info("Status sent")
+    elif motor_instance.validate_message(message_topic):
+        motor_job_th = threading.Thread(target=motor_instance.run_job, args=(message_topic))
         motor_job_th.start()
 
 client = mqtt.Client()
